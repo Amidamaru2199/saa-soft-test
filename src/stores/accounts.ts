@@ -15,10 +15,6 @@ export function parseLabelsToTags(labelsInput: string): LabelTag[] {
     .map((text) => ({ text }))
 }
 
-export function parseTagsToString(labels: LabelTag[]): string {
-  return labels.map((tag) => tag.text).join('; ')
-}
-
 export const useAccountsStore = defineStore('accounts', () => {
   const accounts = ref<Account[]>([])
 
@@ -64,10 +60,6 @@ export const useAccountsStore = defineStore('accounts', () => {
     accounts.value = accounts.value.filter((acc) => acc.id !== id)
   }
 
-  function getAccountById(id: string): Account | undefined {
-    return accounts.value.find((acc) => acc.id === id)
-  }
-
   loadFromStorage()
 
   return {
@@ -75,6 +67,5 @@ export const useAccountsStore = defineStore('accounts', () => {
     addAccount,
     updateAccount,
     removeAccount,
-    getAccountById,
   }
 })

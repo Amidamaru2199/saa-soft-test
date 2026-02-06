@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { useAccountsStore, parseLabelsToTags } from '@/stores/accounts'
 import { Delete, CircleClose } from '@element-plus/icons-vue'
-import type { Account, AccountFormData, RecordType, ValidationErrors } from '@/types/account'
+import type { Account, AccountFormData, ValidationErrors } from '@/types/account'
 
 const props = defineProps<{
   account: Account
