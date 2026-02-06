@@ -10,7 +10,6 @@ const props = defineProps<{
 
 const store = useAccountsStore()
 
-// Form data
 const formData = ref<AccountFormData>({
   id: props.account.id,
   labelsInput: props.account.labels.map((tag) => tag.text).join('; '),
@@ -19,16 +18,13 @@ const formData = ref<AccountFormData>({
   password: props.account.password || '',
 })
 
-// Validation errors
 const errors = ref<ValidationErrors>({
   login: false,
   password: false,
 })
 
-// Computed
 const showPassword = computed(() => formData.value.recordType === 'local')
 
-// Watch record type changes to handle password field
 watch(
   () => formData.value.recordType,
   (newType) => {
@@ -39,7 +35,6 @@ watch(
   }
 )
 
-// Validation functions
 function validateLogin(): boolean {
   const isValid = formData.value.login.trim().length > 0 && formData.value.login.length <= 100
   errors.value.login = !isValid
@@ -62,7 +57,6 @@ function validateAll(): boolean {
   return isLoginValid && isPasswordValid
 }
 
-// Event handlers
 function handleLabelsBlur() {
   if (formData.value.labelsInput.length > 50) {
     formData.value.labelsInput = formData.value.labelsInput.substring(0, 50)

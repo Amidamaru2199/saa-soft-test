@@ -30,12 +30,7 @@ function addAccount() {
           <el-button type="primary" :icon="Plus" circle @click="addAccount" size="large" />
         </div>
 
-        <el-alert
-          type="info"
-          :closable="false"
-          class="help-alert"
-          show-icon
-        >
+        <el-alert type="info" :closable="false" class="help-alert" show-icon>
           <template #title>
             Для указания нескольких меток для одной пары логин/пароль используйте разделитель ;
           </template>
@@ -50,7 +45,8 @@ function addAccount() {
             <div class="field-label-action"></div>
           </div>
 
-          <el-empty v-if="accounts.length === 0" description="Нет учетных записей. Нажмите кнопку '+' чтобы добавить новую." />
+          <el-empty v-if="accounts.length === 0"
+            description="Нет учетных записей. Нажмите кнопку '+' чтобы добавить новую." />
 
           <div v-else class="accounts-list">
             <AccountForm v-for="account in accounts" :key="account.id" :account="account" />
