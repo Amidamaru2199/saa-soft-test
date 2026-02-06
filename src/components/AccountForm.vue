@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useAccountsStore, parseLabelsToTags } from '@/stores/accounts'
+import { Delete, CircleClose } from '@element-plus/icons-vue'
 import type { Account, AccountFormData, RecordType, ValidationErrors } from '@/types/account'
 
 const props = defineProps<{
@@ -111,68 +112,70 @@ function handleDelete() {
 <template>
   <div class="account-row">
     <div class="account-field">
-      <input
+      <el-input
         v-model="formData.labelsInput"
-        type="text"
         placeholder="Метка"
         maxlength="50"
-        class="input-field"
+        show-word-limit
         @blur="handleLabelsBlur"
       />
     </div>
 
     <div class="account-field">
-      <select
+      <el-select
         v-model="formData.recordType"
-        class="select-field"
+        placeholder="Выберите тип"
         @change="handleRecordTypeChange"
       >
-        <option value="local">Локальная</option>
-        <option value="ldap">LDAP</option>
-      </select>
+        <el-option label="Локальная" value="local" />
+        <el-option label="LDAP" value="ldap" />
+      </el-select>
     </div>
 
     <div class="account-field">
-      <input
+      <el-input
         v-model="formData.login"
-        type="text"
         placeholder="Логин"
         maxlength="100"
-        :class="['input-field', { error: errors.login }]"
+        :class="{ 'is-error': errors.login }"
         @blur="handleLoginBlur"
-      />
+      >
+        <template v-if="errors.login" #suffix>
+          <el-icon color="#f56c6c">
+            <circle-close />
+          </el-icon>
+        </template>
+      </el-input>
     </div>
 
     <div class="account-field password-field">
-      <input
+      <el-input
         v-if="showPassword"
         v-model="formData.password"
         type="password"
         placeholder="Пароль"
         maxlength="100"
-        :class="['input-field', { error: errors.password }]"
+        show-password
+        :class="{ 'is-error': errors.password }"
         @blur="handlePasswordBlur"
-      />
+      >
+        <template v-if="errors.password" #suffix>
+          <el-icon color="#f56c6c">
+            <circle-close />
+          </el-icon>
+        </template>
+      </el-input>
       <div v-else class="password-placeholder"></div>
     </div>
 
-    <button class="delete-button" @click="handleDelete" title="Удалить">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M3 6h18"></path>
-        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-      </svg>
-    </button>
+    <div class="account-field">
+      <el-button
+        type="danger"
+        :icon="Delete"
+        circle
+        @click="handleDelete"
+      />
+    </div>
   </div>
 </template>
 
@@ -182,49 +185,27 @@ function handleDelete() {
   grid-template-columns: 1fr 0.8fr 1fr 1fr auto;
   gap: 12px;
   align-items: center;
-  margin-bottom: 12px;
 }
 
 .account-field {
-  min-height: 40px;
+  min-height: 32px;
 }
 
-.input-field,
-.select-field {
+.account-field :deep(.el-input),
+.account-field :deep(.el-select) {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: all 0.2s;
-  background-color: white;
 }
 
-.input-field:focus,
-.select-field:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.account-field :deep(.el-input.is-error .el-input__wrapper) {
+  box-shadow: 0 0 0 1px #f56c6c inset;
 }
 
-.input-field.error {
-  border-color: #ef4444;
-  background-color: #fef2f2;
+.account-field :deep(.el-input.is-error .el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #f56c6c inset;
 }
 
-.input-field.error:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-.select-field {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 16px;
-  padding-right: 35px;
+.account-field :deep(.el-input.is-error .el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px #f56c6c inset;
 }
 
 .password-field {
@@ -233,38 +214,16 @@ function handleDelete() {
 
 .password-placeholder {
   width: 100%;
-  height: 40px;
-}
-
-.delete-button {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  background-color: white;
-  color: #6b7280;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.delete-button:hover {
-  background-color: #fef2f2;
-  border-color: #ef4444;
-  color: #ef4444;
+  height: 32px;
 }
 
 @media (max-width: 768px) {
   .account-row {
     grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .delete-button {
-    width: 100%;
-    justify-self: stretch;
+    gap: 12px;
+    padding: 16px;
+    background-color: #f5f7fa;
+    border-radius: 8px;
   }
 }
 </style>
