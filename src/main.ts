@@ -10,7 +10,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(ElementPlus, {
-  locale: ru,
+	locale: ru,
 })
 
 app.mount('#app')
